@@ -73,6 +73,12 @@ blogsRouter.post('/:blogId/posts', authGuardMiddleware, blogPostValidation, erro
         const {title, shortDescription, content} = req.body;
         const blogId = req.params.blogId;
         process.env.BLOG_ID = blogId.toString()
+
+        const blog = await BlogsService.findBlogsByID(blogId);
+        if (!blog) {
+            res.sendStatus(404); // Возвращаем статус 404, если blogId не найден
+            return;
+        }
         const newPostForBlog = await PostsService.createPosts(title, shortDescription, content, blogId)
         res.status(201).send(newPostForBlog)
 
