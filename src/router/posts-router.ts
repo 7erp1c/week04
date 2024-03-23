@@ -29,6 +29,7 @@ postsRouter.get('/', async (req: RequestWithBlogsPOST<QueryPostRequestType>, res
 postsRouter.post('/', authGuardMiddleware, postsValidation, errorsValidation, async (req: RequestWithPostsPOST<postsCreateAndPutModel>, res: Response) => {
     const newPostsFromRep = await PostsService
         .createPosts( req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)//как сократить
+
     res.status(201).send(newPostsFromRep)
 })
 //
