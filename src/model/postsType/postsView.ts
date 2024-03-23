@@ -30,5 +30,5 @@ export type SortPostRepositoryType = {
     pageSize: number
 }
 export type ParamsId = {
-    id:string
+    blogId:string
 }

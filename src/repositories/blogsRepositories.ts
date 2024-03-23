@@ -16,8 +16,8 @@ export const BlogsRepositories = {
         return newBlogs
     },
 //get(/id)
-    async findBlogsByID(id: string): Promise<blogsView|null> {
-        return await blogCollection.findOne({id}, {projection: {_id: 0}})
+    async findBlogsByID(blogId: string): Promise<blogsView|null> {
+        return await blogCollection.findOne({blogId}, {projection: {_id: 0}})
     },
 //put(/id)
     async updateBlogs(id:string, name: string, description: string, websiteUrl: string): Promise<boolean> {

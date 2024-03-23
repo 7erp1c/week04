@@ -46,7 +46,7 @@ blogsRouter.post('/', authGuardMiddleware, blogsValidation, errorsValidation,
     })
 
 blogsRouter.get('/:blogId/posts', async (req: RequestWithPut<ParamsId, postsCreateAndPutModel>, res: Response) => {
-    const blogId = req.params.id
+    const blogId = req.params.blogId
     const query: QueryBlogRequestType = req.query
         const sortData: SortPostRepositoryType = {
             sortBy: query.sortBy || "createdAt",
@@ -54,7 +54,7 @@ blogsRouter.get('/:blogId/posts', async (req: RequestWithPut<ParamsId, postsCrea
             pageNumber: query.pageNumber || 1,
             pageSize: query.pageSize || 10
         }
-    const posts = await PostsQueryRepository.getAllPosts(sortData, req.params.id);
+    const posts = await PostsQueryRepository.getAllPosts(sortData, blogId);
         // if (posts.items.length < 1) {
         //     res.sendStatus(404)
         //     return
