@@ -56,7 +56,7 @@ blogsRouter.get('/:blogId/posts', async (req: RequestWithPut<ParamsId, postsCrea
             res.sendStatus(404)
             return
         }
-        res.status(200).json(posts);
+        return res.status(200).json(posts);
     })
 
 blogsRouter.post('/:blogId/posts', authGuardMiddleware, blogPostValidation, errorsValidation,
