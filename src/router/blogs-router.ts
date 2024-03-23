@@ -42,7 +42,7 @@ blogsRouter.post('/', authGuardMiddleware, blogsValidation, errorsValidation,
     const newBlogsFromRep = await BlogsService.createBlogs(req.body.name, req.body.description, req.body.websiteUrl)
         const seeId = await BlogsService.findBlogsByID(newBlogsFromRep.id)
         if(seeId) {
-           return res.status(201).send(newBlogsFromRep)
+           return res.status(201).send(seeId)
        }else {
            return res.sendStatus(404)
        }
