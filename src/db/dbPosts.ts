@@ -1,5 +1,5 @@
-import {postsView} from "../model/postsType/postsView";
+import {PostsView} from "../model/postsType/postsView";
 
-export const dbPosts:{posts:postsView[]}  ={
+export const dbPosts:{posts:PostsView[]}  ={
     posts:[]
 }
