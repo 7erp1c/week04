@@ -54,7 +54,7 @@ blogsRouter.get('/:blogId/posts', async (req: RequestWithPut<ParamsId, postsCrea
             pageNumber: query.pageNumber || 1,
             pageSize: query.pageSize || 10
         }
-    const posts = await PostsQueryRepository.getAllPosts(sortData, blogId);
+    const posts = await PostsQueryRepository.getAllPosts(sortData, req.params.blogId);
         // if (posts.items.length < 1) {
         //     res.sendStatus(404)
         //     return

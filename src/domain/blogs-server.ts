@@ -28,8 +28,8 @@ export const BlogsService = {
 
     },
 //get(/id)
-    async findBlogsByID(blogId: string): Promise<blogsView | null> {
-        return BlogsRepositories.findBlogsByID(blogId);
+    async findBlogsByID(id: string): Promise<blogsView | null> {
+        return BlogsRepositories.findBlogsByID(id);
 
     },
 //put(/id)
