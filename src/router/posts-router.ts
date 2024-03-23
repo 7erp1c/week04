@@ -9,6 +9,7 @@ import {errorsValidation} from "../middleware/errorsValidation";
 import {QueryBlogRequestType} from "../model/blogsType/blogsView";
 import {QueryPostRequestType, SortPostRepositoryType} from "../model/postsType/postsView";
 import {PostsQueryRepository} from "../repositories/posts-query-repository";
+import {BlogsService} from "../domain/blogs-server";
 
 
 
@@ -29,8 +30,13 @@ postsRouter.get('/', async (req: RequestWithBlogsPOST<QueryPostRequestType>, res
 postsRouter.post('/', authGuardMiddleware, postsValidation, errorsValidation, async (req: RequestWithPostsPOST<postsCreateAndPutModel>, res: Response) => {
     const newPostsFromRep = await PostsService
         .createPosts( req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)//как сократить
+    const seeId = await BlogsService.findBlogsByID(newPostsFromRep.id)
+    if(seeId) {
+        return res.status(201).send(seeId)
+    }else {
+        return res.sendStatus(404)
+    }
 
-    res.status(201).send(newPostsFromRep)
 })
 //
 
