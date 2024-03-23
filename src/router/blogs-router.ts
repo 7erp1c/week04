@@ -46,6 +46,12 @@ blogsRouter.post('/', authGuardMiddleware, blogsValidation, errorsValidation,
     })
 
 blogsRouter.get('/:blogId/posts', async (req: RequestWithPut<ParamsId, postsCreateAndPutModel>, res: Response) => {
+    const blogId = req.params.id
+    const blog = await BlogsQueryRepository.getBlogById(blogId);
+    if (!blog) {
+        res.sendStatus(404); // Возвращаем статус 404, если blogId не найден
+        return;
+    }
     const query: QueryBlogRequestType = req.query
         const sortData: SortPostRepositoryType = {
             sortBy: query.sortBy || "createdAt",
@@ -54,7 +60,7 @@ blogsRouter.get('/:blogId/posts', async (req: RequestWithPut<ParamsId, postsCrea
             pageSize: query.pageSize || 10
         }
         const posts = await PostsQueryRepository.getAllPosts(sortData, req.params.id);
-        if (!posts) {
+        if (posts.items.length < 1) {
             res.sendStatus(404)
             return
         }
