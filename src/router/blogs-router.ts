@@ -39,8 +39,9 @@ blogsRouter.get('/', async (req: RequestWithBlogsPOST<QueryBlogRequestType>, res
 
 blogsRouter.post('/', authGuardMiddleware, blogsValidation, errorsValidation,
     async (req: RequestWithBlogsPOST<blogsCreateAndPutModel>, res: Response) => {
-        const newBlogsFromRep = await BlogsService.createBlogs(req.body.name, req.body.description, req.body.websiteUrl)
-       if(newBlogsFromRep) {
+    const newBlogsFromRep = await BlogsService.createBlogs(req.body.name, req.body.description, req.body.websiteUrl)
+        const seeId = await BlogsService.findBlogsByID(newBlogsFromRep.id)
+        if(seeId) {
            return res.status(201).send(newBlogsFromRep)
        }else {
            return res.sendStatus(404)
