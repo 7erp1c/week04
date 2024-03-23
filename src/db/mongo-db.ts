@@ -2,7 +2,7 @@
 import {Collection, MongoClient} from "mongodb";
 import dotenv from "dotenv";
 import {blogsView} from "../model/blogsType/blogsView";
-import {postsView} from "../model/postsType/postsView";
+import {PostsView} from "../model/postsType/postsView";
 
 dotenv.config()
 
@@ -16,7 +16,7 @@ export const client: MongoClient = new MongoClient(mongoURI)
 
 export let db = client.db();
 export const blogCollection: Collection<blogsView> = db.collection<blogsView>("blogs")
-export const postCollection: Collection<postsView> = db.collection<postsView>("posts")
+export const postCollection: Collection<PostsView> = db.collection<PostsView>("posts")
 
 export const connectToDB = async () => {
     try {

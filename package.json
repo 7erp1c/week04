@@ -14,7 +14,7 @@
   "scripts": {
     "watch": "tsc -w",
     "dev": "yarn nodemon --inspect dist/index.js",
-    "test": "jest -i"
+    "jest": "jest -i"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
