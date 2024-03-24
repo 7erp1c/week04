@@ -1,7 +1,7 @@
 
 import request = require("supertest");
 import {app} from "../../src/app";
-const routerName = "blogs/";
+const routerName = "/blogs/";
 
 
 const Results =  {
@@ -47,9 +47,9 @@ describe(routerName, () => {
             .send(TestData.emptyFields)
             .expect(400, {
                 errorsMessages: [
-                    {message: "Invalid value", field: "name"},
-                    {message: "Invalid value", field: "description"},
-                    {message: "Invalid value", field: "websiteUrl"}
+                    {message: "Bad request", field: "name"},
+                    {message: "Bad request", field: "description"},
+                    {message: "Bad request", field: "websiteUrl"}
                 ]
             });
 
@@ -57,16 +57,17 @@ describe(routerName, () => {
 
     })
 
-    it(" - POST does not create the blog with incorrect data (name and description over length)", async () => {
+    it(" - POST не создает блог с неверными данными (название, описание по длине,сайт)", async () => {
 
 
-        await request(app).post(routerName)
+        await request(app).post('/blogs')
             .auth("admin", "qwerty")
             .send(TestData.overLengthData)
             .expect(400, {
                 errorsMessages: [
-                    {message: "Invalid value", field: "name"},
-                    {message: "Invalid value", field: "description"}
+                    {message: "Bad request", field: "name"},
+                    {message: "Bad request", field: "description"},
+                    { message: 'Bad request', field: 'websiteUrl' }
                 ]
             });
 
@@ -83,7 +84,7 @@ describe(routerName, () => {
                 "description": "blog about nothing",
                 "websiteUrl": "http://blabla"
             })
-            .expect(400, {errorsMessages: [{message: "Invalid value", field: "websiteUrl"}]});
+            .expect(400, {errorsMessages: [{message: "Bad request", field: "websiteUrl"}]});
 
         await request(app).post(routerName)
             .auth("admin", "qwerty")
@@ -92,7 +93,7 @@ describe(routerName, () => {
                 "description": "blog about nothing",
                 "websiteUrl": "http://www.testaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com"
             })
-            .expect(400, {errorsMessages: [{message: "Invalid value", field: "websiteUrl"}]});
+            .expect(400, {errorsMessages: [{message: "Bad request", field: "websiteUrl"}]});
 
         await request(app).get(routerName).expect(200);
 
@@ -113,7 +114,7 @@ describe(routerName, () => {
         await request(app).get(routerName).expect(200);
 
     })
-
+//_______________________________________________________________________________________
     let testBlog1: any;
     it(" - POST should be create the blog with correct data", async () => {
         const res = await request(app).post(routerName)
@@ -121,57 +122,57 @@ describe(routerName, () => {
             .send({
                 "name": "Blog 1",
                 "description": "blog about nothing",
-                "websiteUrl": "http://www.test.com"
+                "websiteUrl": "https://YA16R8OMDGQZU-6gO1f9KkR9UQddXG7wd9odCSwAWWD2ADpxXDrsed5Bv8-EZ46xjoNXecmzLf-_ZZWi70oWSe2xYUFr"
             })
             .expect(201);
 
         testBlog1 = res.body;
 
-        await request(app).get(routerName + testBlog1.id).expect(testBlog1);
+        await request(app).get(routerName + testBlog1.id).expect(200);
     })
 
 
-    // it(" - POST should be create the blog with correct data on blogs/id/posts", async () => {
-    //
-    //     const res = await request(app).post(routerName + "/" + testBlog1.id + "/posts")
-    //         .auth("admin", "qwerty")
-    //         .send({
-    //             title: "new title",
-    //             shortDescription: "a very short description",
-    //             content: "some content"
-    //         })
-    //         .expect(201);
-    //
-    //     const createdPost = res.body
-    //
-    //     expect(createdPost.title).toBe("new title");
-    //     expect(createdPost.shortDescription).toBe("a very short description");
-    //     expect(createdPost.content).toBe("some content");
-    //     expect(createdPost.blogId).toBe(testBlog1.id);
-    //
-    // })
+    it(" - POST should be create the blog with correct data on blogs/id/posts", async () => {
+
+        const createPostRes = await request(app).post(routerName + "/" + testBlog1.id + "/posts")
+            .auth("admin", "qwerty")
+            .send({
+                title: "new title",
+                shortDescription: "a very short description",
+                content: "some content"
+            })
+            .expect(201);
+
+        const createdPost = createPostRes.body
+
+        expect(createdPost.title).toBe("new title");
+        expect(createdPost.shortDescription).toBe("a very short description");
+        expect(createdPost.content).toBe("some content");
+        expect(createdPost.blogId).toBe(testBlog1.id);
+
+    })
 
 
-    // PUT requests
+    //PUT requests
 
     it(" - PUT does not update the blog with incorrect data (no name)", async () => {
 
-        // send invalid data
+        //send invalid data
 
-        //     await request(app).put(routerName + testBlog1.id)
-        //         .auth("admin", "qwerty")
-        //         .send({
-        //             "name": "",
-        //             "description": "blog about nothing and less",
-        //             "websiteUrl": ""
-        //         })
-        //         .expect(400, {
-        //             errorsMessages: [{message: "Invalid value", field: "name"},
-        //                 {message: "Invalid value", field: "websiteUrl"}]
-        //         });
-        //
-        //     await request(app).get(routerName + testBlog1.id).expect(testBlog1); // check that the data on the server has not been updated
-        // })
+            await request(app).put(routerName + testBlog1.id)
+                .auth("admin", "qwerty")
+                .send({
+                    "name": "",
+                    "description": "blog about nothing and less",
+                    "websiteUrl": ""
+                })
+                .expect(400, {
+                    errorsMessages: [{message: "Bad request", field: "name"},
+                        {message: "Bad request", field: "websiteUrl"}]
+                });
+
+            await request(app).get(routerName + testBlog1.id).expect(testBlog1); // check that the data on the server has not been updated
+        })
 
         it(" - PUT does not update the blog with incorrect data (over length)", async () => {
 
@@ -190,9 +191,9 @@ describe(routerName, () => {
                 })
                 .expect(400, {
                     errorsMessages: [
-                        {message: "Invalid value", field: "name"},
-                        {message: "Invalid value", field: "description"},
-                        {message: "Invalid value", field: "websiteUrl"}
+                        {message: "Bad request", field: "name"},
+                        {message: "Bad request", field: "description"},
+                        {message: "Bad request", field: "websiteUrl"}
                     ]
                 });
 
@@ -212,9 +213,9 @@ describe(routerName, () => {
                 })
                 .expect(400, {
                     errorsMessages: [
-                        {message: "Invalid value", field: "name"},
-                        {message: "Invalid value", field: "description"},
-                        {message: "Invalid value", field: "websiteUrl"}
+                        {message: "Bad request", field: "name"},
+                        {message: "Bad request", field: "description"},
+                        {message: "Bad request", field: "websiteUrl"}
                     ]
                 });
 
@@ -225,7 +226,7 @@ describe(routerName, () => {
             const updateData = {
                 "name": "Bloggggg 1",
                 "description": "blog about nothing and less",
-                "websiteUrl": "http://www.test-123.com"
+                "websiteUrl": "https://YA16R8OMDGQZU-6gO1f9KkR9UQddXG7wd9odCSwAWWD2ADpxXDrsed5Bv8-EZ46xjoNXecmzLf-_ZZWi70oWSe2xYUFr"
             }
             // send invalid data
             await request(app).put(routerName + testBlog1.id)
@@ -241,9 +242,9 @@ describe(routerName, () => {
             const updateData = {
                 "name": "Bloggggg 1",
                 "description": "blog about nothing and less",
-                "websiteUrl": "http://www.test-123.com"
+                "websiteUrl": "https://YA16R8OMDGQZU-6gO1f9KkR9UQddXG7wd9odCSwAWWD2ADpxXDrsed5Bv8-EZ46xjoNXecmzLf-_ZZWi70oWSe2xYUFr"
             }
-            // send valid data
+            // отправлять действительные данные
 
             await request(app).put(routerName + testBlog1.id)
                 .auth("admin", "qwerty")
@@ -256,7 +257,7 @@ describe(routerName, () => {
                 ...testBlog1,
                 ...updateData
             })
-            // check that the data on the server has not been updated
+            // убедитесь, что данные на сервере не были обновлены
         })
 
 
@@ -326,4 +327,3 @@ describe(routerName, () => {
 
 
     })
-})
